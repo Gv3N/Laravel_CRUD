@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -33,7 +36,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -54,7 +57,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param Product $product
      * @return \Illuminate\Http\Response
      */
     public function show(Product $product)
@@ -66,7 +69,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param Product $product
      * @return \Illuminate\Http\Response
      */
     public function edit(Product $product)
@@ -78,38 +81,53 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Product $product
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function update(Request $request, Product $product)
     {
         //update all data with put
         //validate the input
-        $request->validate([
-            'name' => 'required',
-            'detail' => 'required'
-        ]);
+        try{
+            DB::beginTransaction();
+            $request->validate([
+                'name' => 'required',
+                'detail' => 'required'
+            ]);
 
-        //create a new product
-        $product->update($request->all());
+            //create a new product
+            $product->update($request->all());
 
-        //redirect the user send friendly message
-        return redirect()->route('products.index')->with('success','Product created successfully');
+            //redirect the user send friendly message
+            DB::commit();
+            return redirect()->route('products.index')->with('success','Product Updated successfully');
+        }catch (Exception $e){
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param Product $product
      * @return \Illuminate\Http\Response
      */
     public function destroy(Product $product)
     {
         //delete product
-        $product->delete();
-        return redirect()->route('products.index')->with('success','Product deleted successfully');
+        try{
+            DB::beginTransaction();
+            $product->delete();
+            DB::commit();
+            return redirect()->route('products.index')->with('success','Product deleted successfully');
 
+        }catch(Exception $e){
+            DB::rollBack();
+            throw $e;
+        }
 
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,3 +26,7 @@ Route::resource('products',\App\Http\Controllers\ProductController::class);
 /*references :
 https://www.youtube.com/watch?v=0qKTjSRjXnE&list=PLJetLDY7yKup1wDDkQObuRIzCeXYtpNvN&index=10
 */
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
