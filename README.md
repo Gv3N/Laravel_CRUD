@@ -36,7 +36,18 @@ Run the project based on your environment setup.
 -   **Product CRUD:** Create, Read, Update, and Delete products with a simple user-friendly interface.
     
 -   **Database Seeder:** Seed the database with sample data using factories.
-    
+
+## Images
+- Homepage
+  ![Homepage](storage/app/public/homepage.png)
+- Product Index
+  ![Homepage](storage/app/public/product%20crud%20index.png)
+- Product Create
+  ![Homepage](storage/app/public/product%20create.png)
+- Product Show
+  ![Homepage](storage/app/public/product%20show.png)
+- Product Edit
+  ![Homepage](storage/app/public/product%20edit.png)
 
 ## Usage
 
